@@ -1,5 +1,6 @@
 balance = 0
 warehouse_store = {}
+operations = []
 
 while True:
     print("Available commands:")
@@ -23,8 +24,9 @@ while True:
         balance += total_sale
         if product_name in warehouse_store:
             warehouse_store[product_name] -= quantity
+            operations.append(f"Sale: {product_name} - {quantity} units")
         else:
-            warehouse_store[product_name] = -quantity
+            print("Product not available in warehouse.")
         continue
 
     if command == "purchase":
@@ -42,6 +44,8 @@ while True:
             warehouse_store[product_name] += quantity
         else:
             warehouse_store[product_name] = quantity
+
+        operations.append(f"Purchase: {product_name} - {quantity} units")
         continue
 
 
@@ -64,9 +68,30 @@ while True:
             print(f"{single_product} has {quantity} in stock")
 
         else:
-            print("Product not in stock")
+            print("Product is not in stock")
         continue
 
+    if command == "review":
+        from_index = input("Enter the 'from' index: ")
+        to_index = input("Enter the 'to' index: ")
+
+        if not from_index:
+            from_index = 0
+        else:
+            from_index = int(from_index)
+
+        if not to_index:
+            to_index = len(operations)
+        else:
+            to_index = int(to_index)
+
+        if from_index < 0 or to_index > len(operations) or from_index > to_index:
+            print("Invalid range.")
+        else:
+            print("Recorded operations:")
+            for op in operations[from_index:to_index]:
+                print(op)
+
     if command == "end":
-        print("Program is closed, goodnight!")
+        print("Program is now closed, goodnight!")
         break
