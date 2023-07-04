@@ -2,6 +2,32 @@ balance = 0
 warehouse_store = {}
 operations = []
 
+balance_file = "balance.txt"
+inventory_file = "inventory.txt"
+history_file = "history.txt"
+
+with open(balance_file, 'r') as file:
+        balance = file.readline()
+        if balance:
+            balance = float(balance)
+        if not balance:
+            balance = 0
+
+with open(inventory_file, 'r') as file:
+    while True:
+        response = file.readline()
+        if not response:
+            break
+        key, value = response.strip().split(':')
+        warehouse_store[key] = value
+
+with open(history_file, 'r') as file:
+    while True:
+        response = file.readline()
+        if not response:
+            break
+        operations.append(response)
+
 while True:
     print("Available commands:")
     print("balance\nsale\npurchase\naccount\nlist\nwarehouse\nreview\nend")
@@ -93,5 +119,16 @@ while True:
                 print(op)
 
     if command == "end":
+        with open(balance_file, 'w') as file:
+            file.write(str(balance))
+
+        with open(inventory_file, 'w') as file:
+            for product_name, quantity in warehouse_store.items():
+                file.write(f"{product_name}:{quantity}\n")
+
+        with open(history_file, 'w') as file:
+            for op in operations:
+                file.write(op)
+
         print("Program is now closed, goodnight!")
         break
